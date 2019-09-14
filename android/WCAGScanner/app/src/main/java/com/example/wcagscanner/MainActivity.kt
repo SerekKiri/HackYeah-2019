@@ -26,13 +26,17 @@ import android.media.ImageReader
 import android.os.Handler
 import android.view.Display
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.deque.axe.android.constants.AxeStandard
 
 
 class MainActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = Intent(this, FloatingHeadService::class.java)
+        ContextCompat.startForegroundService(this, intent)
+
         setContentView(R.layout.activity_main)
         scanButon?.setOnClickListener {
             getPhoto()
