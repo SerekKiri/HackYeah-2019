@@ -31,6 +31,9 @@ import com.deque.axe.android.constants.AxeStandard
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var projection: MediaProjection? = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         scanButon?.setOnClickListener {
             getPhoto()
         }
+        getPhoto()
+
     }
 
     fun getPhoto() {
@@ -75,65 +80,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 2137) {
-            val projectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-            val mProjection = projectionManager.getMediaProjection(resultCode, data!!)
-
-
-            val displayMetrics = DisplayMetrics()
-            windowManager.defaultDisplay.getRealMetrics(displayMetrics)
-
-
-            val mImageReader = ImageReader.newInstance(displayMetrics.widthPixels, displayMetrics.heightPixels, PixelFormat.RGBA_8888, 10)
-
-
-            val handler = Handler()
-
-            val flags =
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY or DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC
-
-            mImageReader.setOnImageAvailableListener({ img ->
-                mImageReader.setOnImageAvailableListener(null, handler);
-
-                val image = mImageReader.acquireLatestImage();
-
-                var plane = image.getPlanes()[0];
-                val createBitmap = Bitmap.createBitmap(image.getWidth() + ((plane.getRowStride() - (plane.getPixelStride() * image.getWidth())) / plane.getPixelStride()), image.getHeight(), Bitmap.Config.ARGB_8888);
-                createBitmap.copyPixelsFromBuffer(plane.getBuffer());
-                val cropRect = image.getCropRect();
-                val createBitmap2 = Bitmap.createBitmap(createBitmap, cropRect.left, cropRect.top, cropRect.width(), cropRect.height());
-                image.close();
-                val lastBitmap = AxeBitmap(createBitmap2);
-                var config = AxeConf().removeStandard(AxeStandard.BEST_PRACTICE)
-                    .removeStandard(AxeStandard.PLATFORM)
-                var axe = Axe(config)
-                var root = WCAGScannerAccessibilityService.instance?.getRootView()
-                if (root == null) {
-                    Log.v("DASD", "DUPSKO")
-                }
-                var context = AxeContext(root, getAxeDevice(), lastBitmap, WCAGScannerAccessibilityService.instance?.eventStream)
-
-                var res = axe.run(context)
-                res.axeRuleResults?.forEach {
-                    if (it.status != "PASS") {
-                    Log.v("asd", it.ruleSummary)
-                    it.props.values.forEach { Log.v("ASD", it?.toString() ?: "") }
-                    Log.v("OKE", it.status)
-                    Log.v("ASD", it.axeViewId)
-                    }
-
-                }
-                WCAGScannerAccessibilityService.instance?.eventStream?.forEach {
-                    Log.v("ASD", it.eventTypeName)
-                }
-                /* do something with [realSizeBitmap] */
-            }, handler)
-
-            mProjection.createVirtualDisplay(
-                "screen-mirror", displayMetrics.widthPixels, displayMetrics.heightPixels, displayMetrics.densityDpi, 16, mImageReader.getSurface(), null,
-                handler
-            )
-
-
+            val projectionManager =
+                getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+            projection = projectionManager.getMediaProjection(resultCode, data!!)
         }
     }
 }
