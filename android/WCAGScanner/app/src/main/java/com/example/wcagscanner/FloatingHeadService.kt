@@ -41,7 +41,7 @@ class FloatingHeadService : Service(), FloatingViewListener {
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getMetrics(metrics)
         val inflater = LayoutInflater.from(this)
-        val iconView = inflater.inflate(R.layout.widget_chathead, null, false) as ImageView
+        val iconView = inflater.inflate(R.layout.widget_chathead, null, false)
         iconView.setOnClickListener {
             Log.d(TAG, "Click head!")
         }
@@ -58,7 +58,6 @@ class FloatingHeadService : Service(), FloatingViewListener {
         options.overMargin = (16 * metrics.density).toInt()
         mFloatingViewManager!!.addViewToWindow(iconView, options)
 
-        // 常駐起動
         startForeground(NOTIFICATION_ID, createNotification(this))
 
         return START_REDELIVER_INTENT
