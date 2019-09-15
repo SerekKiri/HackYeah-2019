@@ -14,6 +14,7 @@ class WCAGScannerAccessibilityService : AccessibilityService() {
     var eventStream = AxeEventStream()
 
     fun getRootView(): AxeView {
+
         return AxeView(NodeInfo(AccessibilityNodeInfoCompat.wrap(rootInActiveWindow)))
     }
 

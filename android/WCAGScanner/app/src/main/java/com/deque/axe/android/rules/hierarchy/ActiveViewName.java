@@ -13,8 +13,8 @@ import com.deque.axe.android.wrappers.AxeProps.Name;
 public class ActiveViewName extends ActiveView {
 
   public ActiveViewName() {
-    super(AxeStandard.WCAG_20, AxeImpact.CRITICAL,
-        "Views that users can interact with must have a Name.");
+    super(AxeStandard.WCAG_21, AxeImpact.CRITICAL,
+        "1.1.1 Views should have a speakable text");
   }
 
   @Override

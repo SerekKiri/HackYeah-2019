@@ -45,6 +45,8 @@ public class AxeView implements AxeTree<AxeView>, Comparable<AxeView>, JsonSeria
    */
   public final boolean isAccessibilityFocusable;
 
+  public final boolean isScrollable;
+
   /**
    * Whether or not the view responds to Click actions.
    */
@@ -95,6 +97,7 @@ public class AxeView implements AxeTree<AxeView>, Comparable<AxeView>, JsonSeria
     String contentDescription();
 
     boolean isAccessibilityFocusable();
+    boolean isScrollable();
 
     boolean isClickable();
 
@@ -123,6 +126,7 @@ public class AxeView implements AxeTree<AxeView>, Comparable<AxeView>, JsonSeria
       final boolean isClickable,
       final boolean isEnabled,
       final boolean isImportantForAccessibility,
+      final boolean isScrollable,
       final AxeView labeledBy,
       final String packageName,
       final String text,
@@ -130,6 +134,7 @@ public class AxeView implements AxeTree<AxeView>, Comparable<AxeView>, JsonSeria
   ) {
     this.boundsInScreen = boundsInScreen;
     this.className = className;
+    this.isScrollable = isScrollable;
     this.contentDescription = contentDescription;
     this.isAccessibilityFocusable = isAccessibilityFocusable;
     this.isClickable = isClickable;
@@ -160,6 +165,7 @@ public class AxeView implements AxeTree<AxeView>, Comparable<AxeView>, JsonSeria
         builder.isClickable(),
         builder.isEnabled(),
         builder.isImportantForAccessibility(),
+        builder.isScrollable(),
         builder.labeledBy(),
         builder.packageName(),
         builder.text(),

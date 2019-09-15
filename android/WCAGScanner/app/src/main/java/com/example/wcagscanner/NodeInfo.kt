@@ -47,6 +47,10 @@ class NodeInfo(var nodeInfoCompat: AccessibilityNodeInfoCompat?) : AxeView.Build
         return nodeInfoCompat?.text.toString()
     }
 
+    override fun isScrollable(): Boolean {
+        return nodeInfoCompat?.isScrollable ?: false
+    }
+
     override fun isAccessibilityFocusable(): Boolean {
         return nodeInfoCompat?.actionList?.contains(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_ACCESSIBILITY_FOCUS) ?: false
     }

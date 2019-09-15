@@ -1,5 +1,6 @@
 package com.example.wcagscanner
 
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.deque.axe.android.AxeEvent.Builder
@@ -15,6 +16,10 @@ class AxeAccessibilityEvent(val accessibilityEvent: AccessibilityEvent) : Builde
         return accessibilityEvent.packageName?.toString() ?: ""
     }
 
+    override fun className(): String {
+
+        return accessibilityEvent?.className?.toString() ?: ""
+    }
     override fun axeView(): AxeView? {
         if (this.accessibilityEvent.recordCount > 0) {
             val record = this.accessibilityEvent.getRecord(0)

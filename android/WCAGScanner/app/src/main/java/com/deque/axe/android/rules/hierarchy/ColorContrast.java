@@ -20,7 +20,7 @@ public class ColorContrast extends InformativeView {
 
   public ColorContrast() {
     super(AxeStandard.WCAG_21, AxeImpact.SERIOUS,
-        "Text adequately contrasts with its background.");
+        "1.4.3: Contrast ratio");
   }
 
   public void setup(final AxeContext axeContext, final AxeProps axeProps) {

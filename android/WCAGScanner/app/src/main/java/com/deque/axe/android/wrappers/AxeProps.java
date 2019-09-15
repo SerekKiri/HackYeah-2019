@@ -34,6 +34,7 @@ public class AxeProps extends HashMap<String, Object>
       Name.IS_TOUCH_STARTED,
       Name.ACCESSIBILITY_EVENT,
       Name.VISIBLE_TEXT,
+          Name.IS_SCROLLABLE,
       Name.COLOR_BACKGROUND,
       Name.COLOR_FOREGROUND,
       Name.COLOR_CONTRAST,
@@ -49,6 +50,7 @@ public class AxeProps extends HashMap<String, Object>
     String HEIGHT = "height";
     String IMPORTANT = "isImportantForAccessibility";
     String IS_CLICKABLE = "isActive";
+    String IS_SCROLLABLE = "isScrollable";
     String IS_ENABLED = "isEnabled";
     String LABELED_BY = "labeledBy";
     String SPEAKABLE_TEXT = "Speakable Text";

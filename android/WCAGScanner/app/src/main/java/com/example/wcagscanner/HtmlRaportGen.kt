@@ -12,6 +12,8 @@ import android.R.attr.bitmap
 import android.graphics.Rect
 import android.util.Base64
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HtmlRaportGen {
@@ -22,9 +24,34 @@ class HtmlRaportGen {
             val f = File(baseDir + File.separator + fileName)
             val outputStreamWriter =
                 OutputStreamWriter(f.outputStream())
+            val c = Calendar.getInstance().getTime()
+            println("Current time => $c")
 
-// Not sure if the / is on the path or not
-            outputStreamWriter.write("<h1>WCAG raport</h1>")
+            val df = SimpleDateFormat("dd-MMM-yyyy")
+            val formattedDate = df.format(c)
+            outputStreamWriter.write("""
+<html lang="en">
+  <head>
+    <title>WCAG Report</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+      
+      table, th, td {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WCAG Report</h1>
+    <p>Date: """+ formattedDate + """</p>
+    <table>
+      <tr>
+        <th>Screenshot</th>
+        <th>Violation</th>
+      </tr>
+      """)
             var rulesPerView = mutableMapOf<String, MutableList<BrokenRule>>()
             brokenRules.forEach {
                 if (!rulesPerView.containsKey(it.elementId)) {
@@ -36,10 +63,6 @@ class HtmlRaportGen {
 
             rulesPerView.keys.forEach {
                 var item = rulesPerView[it]!!.first()
-                Log.v("ASD", item.left.toString())
-                Log.v("ASD", item.right.toString())
-                Log.v("ASD", item.top.toString())
-                Log.v("ASD", item.bottom.toString())
                 val rect = Rect(item.left, item.top, item.right, item.bottom)
 
                 val height = item.top - item.bottom
@@ -50,19 +73,44 @@ class HtmlRaportGen {
                 Log.v("ASDASD", width.toString())
                 Log.v("ASDASD", x.toString())
                 Log.v("ASDASD", y.toString())
+                var html: String = ""
+try {
+    var bmp = Bitmap.createBitmap(image, item.left, item.top, rect.width(), rect.height())
 
-                var bmp = Bitmap.createBitmap(image, item.left, item.top, rect.width(), rect.height())
-                outputStreamWriter.write("<h2> Element with id " + item.elementName + "</h2>")
-                val byteArrayOutputStream = ByteArrayOutputStream()
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-                val encoded = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    val encoded = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
 
-                outputStreamWriter.write("<img src=\"data:image/png;base64, " + encoded + "\"</img>")
+    html = """<tr>
+          <td>
+            <img src="data:image/png;base64, """ + encoded + """"></img>
+                 </td>
+          <td>
+            """
+} catch (e: Throwable) {
 
+    val byteArrayOutputStream = ByteArrayOutputStream()
+    image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+    val encoded = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT)
+    html = """<tr>
+          <td>
+            <img src="data:image/png;base64, """ + encoded + """"></img>
+                 </td>
+          <td>
+            """
+}
                 rulesPerView[it]?.forEach {
-                    rule ->
-                    outputStreamWriter.write("<h3>- !! " + rule.message + "</h3>" )
+                        rule ->
+                    html += ("<p>" + rule.message + "</p>" )
                 }
+                html += """"
+          </td>
+        </tr>
+"""
+
+                outputStreamWriter.write(html)
+
+
 
             }
             outputStreamWriter.close()

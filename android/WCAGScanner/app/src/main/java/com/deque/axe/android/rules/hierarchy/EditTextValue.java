@@ -20,8 +20,8 @@ public class EditTextValue extends AxeRuleViewHierarchy {
   }
 
   public EditTextValue() {
-    super(AxeStandard.WCAG_20, AxeImpact.CRITICAL,
-        "Editable Views must not override the Value spoken by TalkBack.");
+    super(AxeStandard.WCAG_21, AxeImpact.CRITICAL,
+        "4.1: Do not override value spoken by talkback");
   }
 
   @Override

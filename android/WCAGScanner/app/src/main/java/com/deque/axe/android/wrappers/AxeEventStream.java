@@ -25,7 +25,7 @@ public class AxeEventStream extends LinkedList<AxeEvent> {
     }
 
     if (!applicableEvents.isEmpty()
-        && !applicableEvents.contains(axeEvent.eventType)) {
+        && !applicableEvents.contains(axeEvent.getEventType())) {
       return false;
     }
 

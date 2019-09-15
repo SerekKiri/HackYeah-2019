@@ -26,7 +26,7 @@ public abstract class ModifiableViewName extends AxeRuleViewHierarchy {
   public ModifiableViewName(final @AndroidClassNames String className) {
 
     super(AxeStandard.BEST_PRACTICE, AxeImpact.MODERATE,
-        "Views that have modifiable Values should get their name from a nearby Label.");
+        "1.1.1: Missing label");
 
     applicableClass = className;
   }

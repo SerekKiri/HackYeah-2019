@@ -16,6 +16,8 @@ import android.util.Log
 import android.widget.ImageView
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.content.ComponentName
+import android.content.pm.ActivityInfo
 import android.graphics.*
 import android.hardware.display.DisplayManager
 import android.media.ImageReader
@@ -28,13 +30,23 @@ import com.deque.axe.android.Axe
 import com.deque.axe.android.AxeConf
 import com.deque.axe.android.AxeContext
 import com.deque.axe.android.AxeDevice
+import com.deque.axe.android.constants.AxeEventType
 import com.deque.axe.android.constants.AxeStandard
 import kotlinx.android.parcel.Parcelize
 import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 
 @Parcelize
-data class BrokenRule(val message: String, val left: Int, val top: Int, val right: Int, val bottom: Int, val elementName: String, val elementId: String) : Parcelable
+data class BrokenRule(
+    val message: String,
+    val left: Int,
+    val top: Int,
+    val right: Int,
+    val bottom: Int,
+    val elementName: String,
+    val elementId: String
+) : Parcelable
 
 class FloatingHeadService : Service(), FloatingViewListener {
     private val TAG = "ChatHeadService"
@@ -86,10 +98,17 @@ class FloatingHeadService : Service(), FloatingViewListener {
     fun runScan() {
         iconText.text = "Scanning..."
         val displayMetrics = DisplayMetrics()
-        (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getRealMetrics(displayMetrics)
+        (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getRealMetrics(
+            displayMetrics
+        )
 
         floatingButton.isVisible = false
-        val mImageReader = ImageReader.newInstance(displayMetrics.widthPixels, displayMetrics.heightPixels, PixelFormat.RGBA_8888, 10)
+        val mImageReader = ImageReader.newInstance(
+            displayMetrics.widthPixels,
+            displayMetrics.heightPixels,
+            PixelFormat.RGBA_8888,
+            10
+        )
 
         val handler = Handler()
 
@@ -105,20 +124,35 @@ class FloatingHeadService : Service(), FloatingViewListener {
             val image = mImageReader.acquireLatestImage();
 
             var plane = image.planes[0];
-            val createBitmap = Bitmap.createBitmap(image.getWidth() + ((plane.getRowStride() - (plane.getPixelStride() * image.getWidth())) / plane.getPixelStride()), image.getHeight(), Bitmap.Config.ARGB_8888);
+            val createBitmap = Bitmap.createBitmap(
+                image.getWidth() + ((plane.getRowStride() - (plane.getPixelStride() * image.getWidth())) / plane.getPixelStride()),
+                image.getHeight(),
+                Bitmap.Config.ARGB_8888
+            );
             createBitmap.copyPixelsFromBuffer(plane.getBuffer());
             val cropRect = image.getCropRect();
-            val createBitmap2 = Bitmap.createBitmap(createBitmap, cropRect.left, cropRect.top, cropRect.width(), cropRect.height());
+            val createBitmap2 = Bitmap.createBitmap(
+                createBitmap,
+                cropRect.left,
+                cropRect.top,
+                cropRect.width(),
+                cropRect.height()
+            );
             image.close();
             val lastBitmap = AxeBitmap(createBitmap2);
-            var config = AxeConf().removeStandard(AxeStandard.BEST_PRACTICE)
-                .removeStandard(AxeStandard.PLATFORM)
+            var config = AxeConf()
+            config.customRules.add(ScrollableRule::class.java)
             var axe = Axe(config)
             var root = WCAGScannerAccessibilityService.instance?.getRootView()
             if (root == null) {
                 Log.v("DASD", "DUPSKO")
             }
-            var context = AxeContext(root, getAxeDevice(), lastBitmap, WCAGScannerAccessibilityService.instance?.eventStream)
+            var context = AxeContext(
+                root,
+                getAxeDevice(),
+                lastBitmap,
+                WCAGScannerAccessibilityService.instance?.eventStream
+            )
 
             var res = axe.run(context)
             res.axeRuleResults?.forEach {
@@ -136,16 +170,15 @@ class FloatingHeadService : Service(), FloatingViewListener {
                 Log.v("ASD", it.eventTypeName)
             }
             iconText.text = "WCAG TEST"
+            var rules = mutableListOf<BrokenRule>()
 
 
             var canvas = Canvas(createBitmap2)
-            var rules = mutableListOf<BrokenRule>()
 
-            failedRes?.forEach {
-                ruleRes ->
+            failedRes?.forEach { ruleRes ->
                 Log.v("DOOPA", ruleRes.toJson())
                 val node = root?.query { it.axeViewId == ruleRes.axeViewId }?.first()
-                Log.v("ASD", node?.boundsInScreen?.toJson() ?:" OOF")
+                Log.v("ASD", node?.boundsInScreen?.toJson() ?: " OOF")
 
                 node?.boundsInScreen?.run {
                     val myPaint = Paint()
@@ -175,18 +208,33 @@ class FloatingHeadService : Service(), FloatingViewListener {
                     )
                 }
                 rules.add(
-                    BrokenRule(ruleRes.ruleSummary, node!!.boundsInScreen!!.left,
+                    BrokenRule(
+                        ruleRes.ruleSummary,
+                        node!!.boundsInScreen!!.left,
                         node!!.boundsInScreen.top,
                         node!!.boundsInScreen.right!!,
-                        node!!.boundsInScreen!!.bottom, ruleRes.props.get("className") as String, ruleRes.axeViewId))
+                        node!!.boundsInScreen!!.bottom,
+                        ruleRes.props.get("className") as String,
+                        ruleRes.axeViewId
+                    )
+                )
             }
+
+
+            //Sval info = getPackageManager().getActivityInfo(getCom(), 0);
 
             HtmlRaportGen.generateReport(createBitmap2, rules)
             /* do something with [realSizeBitmap] */
         }, handler)
 
         MainActivity.projection?.createVirtualDisplay(
-            "screen-mirror", displayMetrics.widthPixels, displayMetrics.heightPixels, displayMetrics.densityDpi, 16, mImageReader.getSurface(), null,
+            "screen-mirror",
+            displayMetrics.widthPixels,
+            displayMetrics.heightPixels,
+            displayMetrics.densityDpi,
+            16,
+            mImageReader.getSurface(),
+            null,
             handler
         )
 
