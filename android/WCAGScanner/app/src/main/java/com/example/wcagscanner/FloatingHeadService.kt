@@ -143,7 +143,7 @@ class FloatingHeadService : Service(), FloatingViewListener {
 
             failedRes?.forEach {
                 ruleRes ->
-                Log.v("DOOPA", ruleRes.toJson())
+                Log.v("JSON", ruleRes.toJson())
                 val node = root?.query { it.axeViewId == ruleRes.axeViewId }?.first()
                 Log.v("ASD", node?.boundsInScreen?.toJson() ?:" OOF")
 
