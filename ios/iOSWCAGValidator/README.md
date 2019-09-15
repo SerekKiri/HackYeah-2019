@@ -7,8 +7,16 @@
 - Appium CLI (`npm install -g appium`)
 - Carthage (`brew install carthage`)
 
-## Setup
+## Setup and Usage
 ```
 npm install
+
+# in one tab run:
+appium
+
+# in another tab run:
 npm start <path to .app/.iap>
 ```
+
+When you run it, it gives you an URL with a randomized port to visit.  
+With every visit, it will load the current view from the emulator, analyze it for accessibility problems and return a report in a form of HTML table with screenshots, with invalid elements highlighted in red.
