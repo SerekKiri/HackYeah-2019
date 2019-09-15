@@ -4,6 +4,7 @@ import traverse from './traverse'
 import fastify from 'fastify'
 import handleRules from './handleRules'
 import draw from './draw'
+import * as path from 'path'
 
 if (process.argv.length < 3) {
   console.log('.app/.ipa not specified!')
@@ -64,7 +65,7 @@ if (process.argv.length < 3) {
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <title>WCAG Report</title>
+    <title>WCAG Validation Report</title>
     <style>
       table {
         border-collapse: collapse;
@@ -77,6 +78,8 @@ if (process.argv.length < 3) {
   </head>
   <body>
     <h1>WCAG Report</h1>
+    <p>Application: ${path.parse(process.argv[2]).base}</p>
+    <p>Date: <script>document.write(new Date().toLocaleString())</script></p>
     <table>
       <tr>
         <th>Screenshot</th>

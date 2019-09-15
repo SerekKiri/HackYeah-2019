@@ -1,7 +1,6 @@
 import { parseString } from 'xml2js'
 
 export default function parse (xml: string): Promise<any> {
-  console.log(xml)
   return new Promise((resolve, reject) => {
     parseString(xml, (err, result) => {
       if (err) {
