@@ -1,3 +1,3 @@
-# HackYeah2019 (name in progress)
+# WCAG 2.1 Validator - HackYeah 2019
 
-> Accessibility tester
+> Accessibility validator for Android and iOS apps
