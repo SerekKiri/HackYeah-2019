@@ -116,7 +116,7 @@ class FloatingHeadService : Service(), FloatingViewListener {
             var axe = Axe(config)
             var root = WCAGScannerAccessibilityService.instance?.getRootView()
             if (root == null) {
-                Log.v("DASD", "DUPSKO")
+                Log.v("DASD", "Wystąpił błąd")
             }
             var context = AxeContext(root, getAxeDevice(), lastBitmap, WCAGScannerAccessibilityService.instance?.eventStream)
 
