@@ -9,13 +9,6 @@
 
 ## Setup
 ```
-npm install -g ioswcagvalidator
-
-# or in the project directory
-npm install -g .
-```
-
-## Usage
-```
-ioswcag <path to .app/.iap>
+npm install
+npm start <path to .app/.iap>
 ```

@@ -61,7 +61,8 @@ if (process.argv.length < 3) {
     reply
       .type('text/html')
       .send(`
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en-US">
   <head>
     <title>WCAG Report</title>
     <style>

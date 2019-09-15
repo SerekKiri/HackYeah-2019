@@ -4,6 +4,8 @@
   "description": "validator for (some) WCAG 2.1 tests for iOS",
   "main": "index.js",
   "scripts": {
+    "prepare": "tsc",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bjornskjald <github@bjorn.ml> (https://bjorn.ml/)",
