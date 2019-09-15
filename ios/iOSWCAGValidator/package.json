@@ -1,0 +1,22 @@
+{
+  "name": "ioswcagvalidator",
+  "version": "1.0.0",
+  "description": "validator for (some) WCAG 2.1 tests for iOS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bjornskjald <github@bjorn.ml> (https://bjorn.ml/)",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^2.8.0",
+    "pureimage": "^0.1.6",
+    "webdriverio": "^5.12.5",
+    "xml2js": "^0.4.22"
+  },
+  "devDependencies": {
+    "@types/node": "^12.7.5",
+    "@types/webdriverio": "^5.0.0",
+    "@types/xml2js": "^0.4.5"
+  }
+}
